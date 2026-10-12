@@ -1,0 +1,373 @@
+import cv2
+import os
+
+from insightface.app import FaceAnalysis
+
+
+# ==========================================
+# CONFIGURATION
+# ==========================================
+
+FACES_DIRECTORY = "data/faces_v2"
+
+TARGET_SAMPLES = 30
+
+CAPTURE_INTERVAL = 5
+
+PADDING = 0.25
+
+
+# ==========================================
+# EMPLOYEE ID
+# ==========================================
+
+employee_id = input(
+    "Enter employee ID: "
+).strip()
+
+
+if not employee_id:
+
+    print(
+        "Employee ID cannot be empty."
+    )
+
+    exit()
+
+
+# ==========================================
+# CREATE DIRECTORY
+# ==========================================
+
+employee_directory = os.path.join(
+    FACES_DIRECTORY,
+    employee_id
+)
+
+os.makedirs(
+    employee_directory,
+    exist_ok=True
+)
+
+
+# ==========================================
+# LOAD INSIGHTFACE
+# ==========================================
+
+print()
+print("Loading InsightFace...")
+
+app = FaceAnalysis(
+    name="buffalo_l"
+)
+
+app.prepare(
+    ctx_id=0,
+    det_size=(640, 640)
+)
+
+print(
+    "InsightFace loaded."
+)
+
+
+# ==========================================
+# CAMERA
+# ==========================================
+
+camera = cv2.VideoCapture(0)
+
+
+if not camera.isOpened():
+
+    print(
+        "Could not open camera."
+    )
+
+    exit()
+
+
+# ==========================================
+# VARIABLES
+# ==========================================
+
+sample_count = 0
+
+frame_count = 0
+
+
+print()
+print("========================================")
+print("EMPLOYEE FACE ENROLLMENT")
+print("========================================")
+
+print()
+print(
+    f"Employee ID: {employee_id}"
+)
+
+print()
+print(
+    "Look at the camera."
+)
+
+print(
+    "Slowly move your face left/right/up/down."
+)
+
+print()
+print(
+    "Press 'q' to stop."
+)
+
+print()
+
+
+# ==========================================
+# CAMERA LOOP
+# ==========================================
+
+while sample_count < TARGET_SAMPLES:
+
+    success, frame = camera.read()
+
+
+    if not success:
+
+        print(
+            "Could not read camera frame."
+        )
+
+        break
+
+
+    frame_count += 1
+
+
+    # --------------------------------------
+    # DETECT FACES
+    # --------------------------------------
+
+    faces = app.get(
+        frame
+    )
+
+
+    # --------------------------------------
+    # NO FACE
+    # --------------------------------------
+
+    if len(faces) == 0:
+
+        cv2.putText(
+            frame,
+            "No face detected",
+            (20, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 0, 255),
+            2
+        )
+
+        cv2.imshow(
+            "Employee Enrollment",
+            frame
+        )
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+
+        continue
+
+
+    # --------------------------------------
+    # MULTIPLE FACES
+    # --------------------------------------
+
+    if len(faces) > 1:
+
+        cv2.putText(
+            frame,
+            "Only one person should be visible",
+            (20, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 0, 255),
+            2
+        )
+
+        cv2.imshow(
+            "Employee Enrollment",
+            frame
+        )
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+
+        continue
+
+
+    # --------------------------------------
+    # GET THE FACE
+    # --------------------------------------
+
+    face = faces[0]
+
+
+    bbox = face.bbox.astype(int)
+
+    x1, y1, x2, y2 = bbox
+
+
+    # --------------------------------------
+    # ADD PADDING
+    # --------------------------------------
+
+    width = x2 - x1
+    height = y2 - y1
+
+
+    padding_x = int(
+        width * PADDING
+    )
+
+    padding_y = int(
+        height * PADDING
+    )
+
+
+    x1 = max(
+        0,
+        x1 - padding_x
+    )
+
+    y1 = max(
+        0,
+        y1 - padding_y
+    )
+
+    x2 = min(
+        frame.shape[1],
+        x2 + padding_x
+    )
+
+    y2 = min(
+        frame.shape[0],
+        y2 + padding_y
+    )
+
+
+    # --------------------------------------
+    # DRAW BOX
+    # --------------------------------------
+
+    cv2.rectangle(
+        frame,
+        (x1, y1),
+        (x2, y2),
+        (0, 255, 0),
+        2
+    )
+
+
+    # --------------------------------------
+    # CAPTURE
+    # --------------------------------------
+
+    if (
+        frame_count % CAPTURE_INTERVAL == 0
+        and sample_count < TARGET_SAMPLES
+    ):
+
+        face_image = frame[
+            y1:y2,
+            x1:x2
+        ]
+
+
+        if (
+            face_image.shape[0] > 100
+            and face_image.shape[1] > 100
+        ):
+
+            sample_count += 1
+
+
+            filename = os.path.join(
+                employee_directory,
+                f"face_{sample_count:02d}.jpg"
+            )
+
+
+            cv2.imwrite(
+                filename,
+                face_image
+            )
+
+
+            print(
+                f"Captured "
+                f"{sample_count}/{TARGET_SAMPLES}"
+            )
+
+
+    # --------------------------------------
+    # DISPLAY COUNTER
+    # --------------------------------------
+
+    cv2.putText(
+        frame,
+        f"Samples: "
+        f"{sample_count}/{TARGET_SAMPLES}",
+        (20, frame.shape[0] - 20),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (0, 255, 0),
+        2
+    )
+
+
+    # --------------------------------------
+    # DISPLAY
+    # --------------------------------------
+
+    cv2.imshow(
+        "Employee Enrollment",
+        frame
+    )
+
+
+    # --------------------------------------
+    # QUIT
+    # --------------------------------------
+
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+
+        break
+
+
+# ==========================================
+# CLEANUP
+# ==========================================
+
+camera.release()
+
+cv2.destroyAllWindows()
+
+
+print()
+print("========================================")
+print("ENROLLMENT COMPLETED")
+print("========================================")
+
+print(
+    f"Employee ID: {employee_id}"
+)
+
+print(
+    f"Samples captured: {sample_count}"
+)
+
+print(
+    f"Saved in: {employee_directory}"
+)

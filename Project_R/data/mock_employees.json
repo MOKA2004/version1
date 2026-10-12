@@ -1,0 +1,90 @@
+[
+  {
+    "id": 9608,
+    "name": "Meenamrutha Bhasyam",
+    "loginId": "mbhasyam",
+    "mailId": "mbhasyam@miraclesoft.com",
+    "reportsTo": "Saradhi Prathi",
+    "hrContact": "Purnima Devi Kella",
+    "department": "Software Services",
+    "designation": "Software Trainee",
+    "teamName": "Training"
+  },
+  {
+    "id": 9618,
+    "name": "Vikansha Yasa",
+    "loginId": "vyasa",
+    "mailId": "vyasa@miraclesoft.com",
+    "reportsTo": "Saradhi Prathi",
+    "hrContact": "Purnima Devi Kella",
+    "department": "Software Services",
+    "designation": "Software Trainee",
+    "teamName": "Training"
+  },
+  {
+    "id": 9606,
+    "name": "Pavani Lakshmi Tatikonda",
+    "loginId": "ptatikonda",
+    "mailId": "ptatikonda@miraclesoft.com",
+    "reportsTo": "Saradhi Prathi",
+    "hrContact": "Purnima Devi Kella",
+    "department": "Software Services",
+    "designation": "Software Trainee",
+    "teamName": "Training"
+  },
+  {
+    "id": 9604,
+    "name": "Nithin Sai Boggarapu",
+    "loginId": "nboggarapu",
+    "mailId": "nboggarapu@miraclesoft.com",
+    "reportsTo": "Narayya Guptha Dangeti",
+    "hrContact": "Sruthi Kolli",
+    "department": "Software Services",
+    "designation": "Software Trainee",
+    "teamName": "Delivery"
+  },
+  {
+    "id": 9615,
+    "name": "Nooka Naveenth Chowdari",
+    "loginId": "nchowdari",
+    "mailId": "nchowdari@miraclesoft.com",
+    "reportsTo": "Saradhi Prathi",
+    "hrContact": "Purnima Devi Kella",
+    "department": "Software Services",
+    "designation": "Software Trainee",
+    "teamName": "Training"
+  },
+  {
+    "id": 9614,
+    "name": "Indhu Sanapathi",
+    "loginId": "isanapathi",
+    "mailId": "isanapathi@miraclesoft.com",
+    "reportsTo": "Saradhi Prathi",
+    "hrContact": "Purnima Devi Kella",
+    "department": "Software Services",
+    "designation": "Software Trainee",
+    "teamName": "Training"
+  },
+  {
+    "id": 6496,
+    "name": "Durga Mallesh Amujuri",
+    "loginId": "mamujuri",
+    "mailId": "mamujuri@miraclesoft.com",
+    "reportsTo": "Saradhi Prathi",
+    "hrContact": "Purnima Devi Kella",
+    "department": "Software Services",
+    "designation": "Software Trainee",
+    "teamName": "Training"
+  },
+  {
+    "id": 9605,
+    "name": "Jaya Aswanth Allu",
+    "loginId": "aallu",
+    "mailId": "aallu@miraclesoft.com",
+    "reportsTo": "Manasa Brahmateja Sutapalli",
+    "hrContact": "Lohitha Bondi",
+    "department": "Software Services",
+    "designation": "Software Trainee",
+    "teamName": "Innovation"
+  }
+]
